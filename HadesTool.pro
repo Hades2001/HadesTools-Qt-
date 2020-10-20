@@ -31,6 +31,7 @@ SOURCES += \
     bitmapconversion.cpp
 
 HEADERS += \
+    fontconversioninterface.h \
         mainwindow.h \
     fonttools.h \
     bitmapconversion.h

@@ -8,6 +8,13 @@ FontTools::FontTools(QWidget *parent) :
     ui->setupUi(this);
     ui->le_pixSize->setValidator(new QIntValidator(0,65536));
 
+    //fontMonoConversion* fontMonoConversion;
+    //QVariant var = QVariant::fromValue(fontMonoConversion);
+    //ui->cb_colorMode->addItem("Mono",QVariant::fromValue(fontMonoConversion));
+    //QVariant value = ui->cb_colorMode->currentData();
+    //fontConversionInterface* ptr = value.value<fontConversionInterface*>();
+
+
     _Str = "F";
     Generated(_Str);
 }
@@ -29,73 +36,20 @@ QByteArray FontTools::Generated(QString font)
     QFont SeleFont = ui->Cb_font->currentFont();
     SeleFont.setPixelSize(_fontSize);
     canvasPainter.setFont(SeleFont);
-    //canvasPainter.drawRect(QRect(0, 0, _fontSize, _fontSize));
     canvasPainter.drawText(QRect(0 + offsetX, 0 + offsetY, _fontSize, _fontSize),Qt::AlignBottom | Qt::AlignHCenter,font);
 
     canvasPainter.end();
 
-    QImage virtualCanvas = QImage(_fontSize,_fontSize,QImage::Format_RGB888);
-    virtualCanvas.fill(QColor(255,255,255));
-
-    QPainter virtualcanvasPainter(&virtualCanvas);
-
-    virtualcanvasPainter.setPen(QColor(0,0,0));
-    for ( int y = 0; y < _fontSize; y++) {
-        for ( int x = 0; x < _fontSize; x++ ) {
-            QRgb pix = _canvasMap.pixel(x,y);
-            int pixGray = qGray(pix);
-            if( pixGray < _monoThreshold )
-            {
-                virtualcanvasPainter.drawPoint(x,y);
-            }
-        }
-    }
-    virtualcanvasPainter.end();
-    QImage labImage = virtualCanvas.scaled(ui->label->width(),
-                                         ui->label->height(),
-                                         Qt::KeepAspectRatio, Qt::FastTransformation);
+    //QVariant value = ui->cb_colorMode->currentData();
+    //fontConversionInterface* ConversionPtr = value.value<fontConversionInterface*>();
+    //if( ConversionPtr == nullptr ) return QByteArray();
+    //QImage virtualCanvas = ConversionPtr->FontImageConversion(_canvasMap);
+    //QImage labImage = virtualCanvas.scaled(ui->label->width(),
+    //                                     ui->label->height(),
+    //                                     Qt::KeepAspectRatio, Qt::FastTransformation);
 
 
-    ui->label->setPixmap(QPixmap::fromImage(labImage));
-
-    /*
-    QPixmap canvasMap(ui->label->width(),ui->label->width());
-    canvasMap.fill(QColor(0,0,0));
-
-    QPainter canvasPainter(&canvasMap);
-
-    if( _fontSize > 46 )
-    {
-
-    }
-    else
-    {
-        qreal canvasPixsize = qreal(ui->label->width()) / qreal(_fontSize);
-        qreal canvasPointSize = canvasPixsize * 0.8;
-        for( int y = 0; y < _fontSize; y++ )
-        {
-            for( int x = 0; x < _fontSize; x++ )
-            {
-                canvasPainter.fillRect(QRectF(x * canvasPixsize + ( canvasPixsize - canvasPointSize) / 2,
-                                              y * canvasPixsize + ( canvasPixsize - canvasPointSize) / 2,
-                                              canvasPointSize,
-                                              canvasPointSize),QBrush(QColor(0,255,0)));
-            }
-        }
-    }
-
-
-    canvasPainter.setPen(QColor(255,255,255));
-
-    QFont SeleFont = ui->Cb_font->currentFont();
-    SeleFont.setPixelSize(_fontSize);
-    canvasPainter.setFont(SeleFont);
-    canvasPainter.drawText(QRect(0, 0, 128, 128),Qt::AlignBottom | Qt::AlignLeft,font);
-
-    canvasPainter.end();
-
-    ui->label->setPixmap(canvasMap);
-    */
+    //ui->label->setPixmap(QPixmap::fromImage(labImage));
     return QByteArray();
 
 }
@@ -153,3 +107,47 @@ void FontTools::on_hs_MonoThreshold_valueChanged(int value)
     _monoThreshold = value;
     Generated(_Str);
 }
+/*
+QImage fontMonoConversion::FontImageConversion(QImage virtualCanvas)
+{
+    int width = virtualCanvas.width();
+    int height = virtualCanvas.height();
+    QImage Canvas = QImage(width,height,QImage::Format_RGB888);
+    Canvas.fill(QColor(255,255,255));
+
+    QPainter virtualcanvasPainter(&virtualCanvas);
+
+    virtualcanvasPainter.setPen(QColor(0,0,0));
+    for ( int y = 0; y < height; y++) {
+        for ( int x = 0; x < width; x++ ) {
+            QRgb pix = virtualCanvas.pixel(x,y);
+            int pixGray = qGray(pix);
+            if( pixGray < 128 )
+            {
+                virtualcanvasPainter.drawPoint(x,y);
+            }
+        }
+    }
+    virtualcanvasPainter.end();
+    return Canvas;
+}
+
+int fontMonoConversion::FontGenerat(QImage virtualCanvas,
+                        QString FileName,
+                        QString fontName,int fontSize,
+                        QFile *Header,QFile *Source)
+{
+    Q_UNUSED(virtualCanvas)
+    Q_UNUSED(FileName)
+    Q_UNUSED(fontName)
+    Q_UNUSED(fontSize)
+    Q_UNUSED(Header)
+    Q_UNUSED(Source)
+    return 0;
+}
+
+QWidget* fontMonoConversion::getFontSetQWidger()
+{
+    return nullptr;
+}
+*/
